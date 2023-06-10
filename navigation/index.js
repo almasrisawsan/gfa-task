@@ -30,7 +30,7 @@ const AppStack = () => {
     >
       <Tab.Screen
         options={{
-          tabBarLabel: "Main",
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),

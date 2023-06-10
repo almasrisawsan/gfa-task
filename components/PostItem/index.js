@@ -15,11 +15,14 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const PostItem = ({ title, body, key }) => {
+const PostItem = ({ title, body, id, key, link }) => {
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={() => navigation.navigate("Product")}>
+    <Pressable
+      onPress={() => navigation.navigate(link, { postId: id })}
+      key={key}
+    >
       <Box px="10">
         <HStack p="3" alignItems={"center"} justifyContent={"space-between"}>
           <VStack w="full">
