@@ -1,7 +1,8 @@
 import Navigation from "./navigation";
 import useCustomFonts from "./hooks/useCustomFonts";
 import ThemeProvider from "./providers/themeProvider";
-import { Text } from "react-native";
+import PostsProvider from "./providers/postsProvider";
+
 export default function App() {
   const [fontsLoaded] = useCustomFonts();
 
@@ -11,7 +12,9 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <Navigation />
+      <PostsProvider>
+        <Navigation />
+      </PostsProvider>
     </ThemeProvider>
   );
 }
