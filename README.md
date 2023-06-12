@@ -141,7 +141,7 @@ LinkedIn: <https://www.linkedin.com/in/sawsan-almasri/>
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [product-screenshot]: assets/home-screen.png
 [home-screenshot]: assets/home-screen.png
-[android-screenshot]: assets/android-screen.png
+[android-screenshot]: assets/android-home.png
 [edit-screenshot]: assets/edit-screen.png
 [add-screenshot]: assets/add-screen.png
 [React.js]: https://img.shields.io/badge/React-React%20Native-black
