@@ -115,16 +115,16 @@ _Below is an example of how you can instruct your audience on installing and set
 
 * You can list all posts in home page screen
 * IOS
-[home-screenshot]
+[![Product Name Screen Shot][home-screenshot]]
 
 * Android
-[android-screenshot]
+[![Product Name Screen Shot][android-screenshot]]
 
 * You can edit selected post
-[edit-screenshot]
+[![Product Name Screen Shot][edit-screenshot]]
 
 * You can add new post
-[add-screenshot]
+[![Product Name Screen Shot][add-screenshot]]
 
 * All fields are required and have validation
 
