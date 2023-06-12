@@ -10,14 +10,19 @@ import {
   Fab,
   Icon,
   Heading,
+  useToast,
 } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import usePosts from "../../hooks/usePosts";
+import axiosInstance from "../../axios";
 
 const PostForm = ({ title, body, userId, id }) => {
   const navigation = useNavigation();
-  const { addPost, posts, isLoading, editPost, error } = usePosts();
+  const toast = useToast();
+  const { posts, setPosts } = usePosts();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setData] = useState({
     title,
     body,
@@ -25,20 +30,70 @@ const PostForm = ({ title, body, userId, id }) => {
     id,
   });
   const { title: postTitle, body: postBody, id: postId } = formData;
-
   const heading = postId ? "Edit" : "Add";
-  let isTitleValid = postTitle?.length !== 0;
-  let isDescriptionValid = postBody?.length !== 0;
+
+  const validate = () => {
+    const formErrors = {};
+
+    if (!postTitle) {
+      formErrors.title = "Title is required";
+    }
+    if (!postBody) {
+      formErrors.body = "Description is required";
+    }
+
+    setErrors(formErrors);
+  };
 
   const onSubmit = useCallback(async () => {
-    postId
-      ? await editPost(formData)
-      : await addPost({
-          ...formData,
-          userId: posts.length + 1,
-          id: posts.length + 1, //id should be created after submission but this is a fake api
-        });
-    !error && navigation.navigate("Home");
+    try {
+      setIsLoading(true);
+      await axiosInstance.post("/posts", {
+        ...formData,
+        userId: posts.length + 1,
+        id: posts.length + 1, //id should be created after submission but this is a fake api
+      });
+      setPosts([formData, ...posts]);
+      toast.show({
+        description: "Post added successfully",
+        bg: "success.500",
+        duration: "2000",
+      });
+      setIsLoading(false);
+      navigation.navigate("Home");
+    } catch (error) {
+      setIsLoading(false);
+      toast.show({
+        description: "Something wrong happened",
+        bg: "danger.500",
+        duration: "2000",
+      });
+    }
+  }, [formData]);
+
+  const onEdit = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axiosInstance.put(`/posts/${postId}`, formData);
+      const clonedPosts = [...posts];
+      const index = posts.findIndex((x) => x.id == data.id);
+      clonedPosts[index] = data;
+      setPosts([...clonedPosts]);
+      toast.show({
+        description: "Post edited successfully",
+        bg: "success.500",
+        duration: "2000",
+      });
+      setIsLoading(false);
+      navigation.navigate("Home");
+    } catch (error) {
+      setIsLoading(false);
+      toast.show({
+        description: "Something wrong happened",
+        bg: "danger.500",
+        duration: "2000",
+      });
+    }
   }, [formData]);
 
   const openNewForm = useCallback(() => {
@@ -52,7 +107,7 @@ const PostForm = ({ title, body, userId, id }) => {
       </Heading>
 
       <VStack width="90%" mx="3" maxW="300px">
-        <FormControl h="24" isRequired isInvalid={!isTitleValid}>
+        <FormControl h="24" isRequired isInvalid={errors?.title}>
           <FormControl.Label
             _text={{
               bold: true,
@@ -65,16 +120,17 @@ const PostForm = ({ title, body, userId, id }) => {
             size="md"
             value={postTitle}
             onChangeText={(value) => setData({ ...formData, title: value })}
+            onBlur={validate}
           />
-          {!isTitleValid && (
+          {errors?.title && (
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}
             >
-              Title is required
+              {errors?.title}
             </FormControl.ErrorMessage>
           )}
         </FormControl>
-        <FormControl h="32" isRequired isInvalid={!isDescriptionValid}>
+        <FormControl h="32" isRequired isInvalid={errors?.body}>
           <FormControl.Label
             _text={{
               bold: true,
@@ -83,26 +139,27 @@ const PostForm = ({ title, body, userId, id }) => {
             Description
           </FormControl.Label>
           <TextArea
-            isInvalid={!isDescriptionValid}
+            isInvalid={errors?.body}
             maxW="300"
             size="md"
             placeholder="Enter description"
             value={postBody}
             onChangeText={(text) => setData({ ...formData, body: text })}
+            onBlur={validate}
           />
 
-          {!isDescriptionValid && (
+          {errors?.body && (
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}
             >
-              Description is required
+              {errors?.body}
             </FormControl.ErrorMessage>
           )}
         </FormControl>
         <Button
-          isDisabled={!isTitleValid || !isDescriptionValid}
+          isDisabled={!postTitle || !postBody}
           isLoading={isLoading}
-          onPress={onSubmit}
+          onPress={postId ? onEdit : onSubmit}
           mt="5"
           colorScheme="cyan"
         >

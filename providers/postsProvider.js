@@ -6,7 +6,6 @@ import axiosInstance from "../axios";
 const PostsProvider = ({ children }) => {
   const toast = useToast();
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const getPosts = useCallback(async () => {
@@ -25,55 +24,6 @@ const PostsProvider = ({ children }) => {
     }
   }, []);
 
-  const addPost = async (post) => {
-    try {
-      setIsLoading(true);
-      await axiosInstance.post("/posts", post);
-      setPosts([post, ...posts]);
-      toast.show({
-        description: "Post added successfully",
-        bg: "success.500",
-        duration: "2000",
-      });
-      setIsLoading(false);
-      setError(false);
-    } catch (error) {
-      setIsLoading(false);
-      setError(true);
-      toast.show({
-        description: "Something wrong happened",
-        bg: "danger.500",
-        duration: "2000",
-      });
-    }
-  };
-
-  const editPost = async (post) => {
-    try {
-      setIsLoading(true);
-      const { data } = await axiosInstance.put(`/posts/${post.id}`, post);
-      const clonedPosts = [...posts];
-      const index = posts.findIndex((x) => x.id == data.id);
-      clonedPosts[index] = data;
-      setPosts([...clonedPosts]);
-      toast.show({
-        description: "Post added successfully",
-        bg: "success.500",
-        duration: "2000",
-      });
-      setIsLoading(false);
-      setError(false);
-    } catch (error) {
-      setIsLoading(false);
-      setError(true);
-      toast.show({
-        description: "Something wrong happened",
-        bg: "danger.500",
-        duration: "2000",
-      });
-    }
-  };
-
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -81,12 +31,10 @@ const PostsProvider = ({ children }) => {
   const contextState = useMemo(
     () => ({
       posts,
-      error,
+      setPosts,
       isLoading,
-      addPost,
-      editPost,
     }),
-    [posts, isLoading, addPost, editPost]
+    [posts, setPosts, isLoading]
   );
   return (
     <PostsContext.Provider value={contextState}>

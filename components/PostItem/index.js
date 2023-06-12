@@ -16,9 +16,7 @@ const PostItem = ({ title, body, link, ...rest }) => {
             <Heading size="sm" isTruncated>
               {title}
             </Heading>
-            <Text fontSize="md" isTruncated>
-              {body}
-            </Text>
+            <Text isTruncated>{body}</Text>
           </VStack>
 
           <MaterialIcons color={"gray"} size="30" name="chevron-right" />
