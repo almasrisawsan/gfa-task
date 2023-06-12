@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import PostScreen from "../screens/PostScreen";
+import { COLORS } from "../constants";
 
 const Stack = createStackNavigator();
 
@@ -8,10 +9,11 @@ const HomeStack = ({ navigation }) => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTintColor: "#0284c7",
+        headerTintColor: COLORS.BLUE,
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        cardStyle: { backgroundColor: COLORS.LIGHTBLUE },
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />

@@ -1,27 +1,14 @@
-import React from "react";
-import {
-  Text,
-  Image,
-  Badge,
-  VStack,
-  Box,
-  Container,
-  HStack,
-  Button,
-  Heading,
-  Pressable,
-  Divider,
-} from "native-base";
+import { memo } from "react";
+import { Text, VStack, Box, HStack, Heading, Pressable } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const PostItem = ({ title, body, id, key, link }) => {
+const PostItem = ({ title, body, link, ...rest }) => {
   const navigation = useNavigation();
 
   return (
     <Pressable
-      onPress={() => navigation.navigate(link, { postId: id })}
-      key={key}
+      onPress={() => navigation.navigate(link, { title, body, ...rest })}
     >
       <Box px="10">
         <HStack p="3" alignItems={"center"} justifyContent={"space-between"}>
@@ -37,8 +24,7 @@ const PostItem = ({ title, body, id, key, link }) => {
           <MaterialIcons color={"gray"} size="30" name="chevron-right" />
         </HStack>
       </Box>
-      <Divider bg="gray.300" my="1" />
     </Pressable>
   );
 };
-export default PostItem;
+export default memo(PostItem);
