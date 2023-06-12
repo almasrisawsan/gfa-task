@@ -26,7 +26,7 @@ const HomeScreen = () => {
           renderItem={renderItem}
           keyExtractor={(item, index) => `item-${item.id}-${index}`}
           maxToRenderPerBatch={10}
-          initialNumToRender={5}
+          initialNumToRender={10}
           removeClippedSubviews
           ItemSeparatorComponent={<Divider bg="gray.300" my="1" />}
           ListHeaderComponent={
